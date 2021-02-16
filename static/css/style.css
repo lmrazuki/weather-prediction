@@ -4,6 +4,14 @@ body {
   background-color: #161d20;
 }
 
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+
 .hero-image {
   background-image: url("https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80");
   background-color: #cccccc;
@@ -45,10 +53,41 @@ span {
 p {
   font-size: 20px;
 }
+tbody .aligner {
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
 td {
   line-height: 55px;
   vertical-align: middle;
 }
-i {
-  vertical-align: baseline;
+
+th {
+  line-height: 55px;
+  vertical-align: middle;
+}
+
+i:before {
+  position: relative;
+  top: 50%;
+  transform: translateY(75%);
+  display: block;
+}
+
+.icon {
+  position: relative;
+  top: 50%;
+  transform: translateY(30%);
+  display: block;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.5;
 }

@@ -3,7 +3,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Events</title>
+    <title>Louis' Weather Predictor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.7/d3.min.js"></script>
     <script src="{{url_for('static', filename='js/script.js')}}"></script>
     <link
@@ -23,158 +23,184 @@
   </head>
 
   <body>
-    <div
+    <!-- <div
       class="container-fluid my-4 justify-content-center rounded"
       style="background: rgb(2, 29, 29)"
+    > -->
+    <video autoplay muted loop id="myVideo">
+      <source
+        src="https://player.vimeo.com/video/342387372?title=0&portrait=0&byline=0&autoplay=1"
+        type="video/mp4"
+      />
+    </video>
+
+    <div class="row hero-image justify-content-center">
+      <div class="container-fluid">
+        <!-- <div class="hero-image"> -->
+        <div class="hero-text">
+          <h1>Melbourne Rain Predictor</h1>
+          <p>
+            On this page, we use a Machine Learning algorithm to predict if it
+            is going to rain in Melbourne.
+          </p>
+          <button
+            type="button"
+            class="btn btn-lg btn-success"
+            id="predict"
+            onclick="updateData()"
+          >
+            Predict rain
+          </button>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+    <div
+      class="row d-flex justify-content-center py-4 align-items-center"
+      style="
+        background-image: linear-gradient(
+          to right top,
+          #2d7c9d,
+          #0071a1,
+          #0064a4,
+          #0055a3,
+          #2d449d
+        );
+      "
     >
-      <div class="row hero-image justify-content-center">
-        <div class="container-fluid">
-          <!-- <div class="hero-image"> -->
-          <div class="hero-text">
-            <h1>Melbourne Rain Predictor</h1>
-            <p style="font-size: large">
-              On this page, we use a Machine Learning algorithm to predict if it
-              is going to rain in Melbourne.
-            </p>
-            <button
-              type="button"
-              class="btn btn-lg btn-success"
-              id="predict"
-              onclick="updateData()"
-            >
-              Predict rain
-            </button>
-            <!-- </div> -->
-          </div>
+      <div class="col-md-6 col-xs-12 mx-2">
+        <div class="table-responsive align-items-center">
+          <table
+            id="weather_today"
+            class="table table-dark table-striped text-center"
+            style="width: 80%; font-size: 22px"
+          >
+            <thead>
+              <tr>
+                <th colspan="6" class="table-head text-center">
+                  This prediction is based on today's weather conditions:
+                </th>
+              </tr>
+            </thead>
+            <tbody id="table_body">
+              <tr>
+                <td style="width: 5%">
+                  <img class="icon" src="{{icon_id}}" style="width: 2.5rem" />
+                </td>
+                <td>Forecast</td>
+                <td>{{forecast}}</td>
+
+                <td style="width: 5%">
+                  <i class="bi bi-droplet-half"></i>
+                </td>
+                <td>Humidity</td>
+                <td>{{today.humidity}}%</td>
+              </tr>
+              <tr>
+                <td style="width: 5%">
+                  <i class="bi bi-droplet-fill"></i>
+                </td>
+                <td>Rainfall</td>
+                <td>{{rain}} mm</td>
+
+                <td style="width: 5%">
+                  <i class="bi bi-arrow-down-up"></i>
+                </td>
+                <td>Pressure</td>
+                <td>{{today["pressure"]}} Pa</td>
+              </tr>
+              <tr>
+                <td style="width: 5%">
+                  <i class="bi bi-thermometer"></i>
+                </td>
+                <td>Min Temp</td>
+                <td>{{today.temp.min}} C</td>
+
+                <td style="width: 5%">
+                  <i class="bi bi-thermometer-half"></i>
+                </td>
+                <td>Max Temp</td>
+                <td>{{today.temp.max}} C</td>
+              </tr>
+              <tr>
+                <td style="width: 5%">
+                  <i class="bi bi-shuffle"></i>
+                </td>
+                <td>Wind Speed</td>
+                <td>{{today.wind_speed}} km/h</td>
+
+                <td style="width: 5%">
+                  <i class="bi bi-cloud"></i>
+                </td>
+                <td>Cloudiness</td>
+                <td>{{today.clouds}}%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div
-        class="row justify-content-center py-4 align-items-center"
-        style="background: #2d7c9d"
-      >
-        <div class="col-4 justify-content-center mx-2">
-          <div class="card text-white" style="width: 22rem">
-            <div class="card body bg-dark">
-              <h3 class="card title bg-dark text-center py-2">
-                Tomorrows's Prediction:
-              </h3>
-              <div class="container text-center" id="tomorrow">
-                Based on our model you can expect:
-                <h5 id="prediction">Click the button and find out!</h5>
-                <img
-                  src="https://media0.giphy.com/media/UVq6ff7EUxF67ZtrNq/200w.webp?cid=ecf05e47t4zcjqna8nx6x9vgzgjm5kmi0eg2s3w6jon8d3bb&rid=200w.webp"
-                  class="rounded my-2"
-                  id="gif"
-                  style="width: 19rem; height: auto"
-                />
-              </div>
+      <div class="col-md-3 col-xs-8 ml-0 py-2">
+        <div class="card text-white">
+          <div class="card body bg-dark">
+            <h3 class="card title text-center py-3" style="background: #24242c">
+              <strong>Tomorrows's Prediction:</strong>
+            </h3>
+            <div class="container text-center" id="tomorrow">
+              Based on our model you can expect:
+              <h5 id="prediction">Click the button and find out!</h5>
+              <img
+                src="https://media0.giphy.com/media/UVq6ff7EUxF67ZtrNq/200w.webp?cid=ecf05e47t4zcjqna8nx6x9vgzgjm5kmi0eg2s3w6jon8d3bb&rid=200w.webp"
+                class="rounded my-2"
+                id="gif"
+                style="width: 19rem; height: auto"
+              />
             </div>
-          </div>
-        </div>
-        <div class="col-7 justify-content-center mx-2">
-          <div class="table-responsive align-items-center">
-            <table
-              id="weather_today"
-              class="table table-dark table-striped align-middle"
-              style="width: 80%; font-size: 22px"
-            >
-              <thead>
-                <tr class="align-middle">
-                  <th colspan="6" class="table-head">
-                    The features for the model are:
-                  </th>
-                </tr>
-              </thead>
-              <tbody id="table_body">
-                <tr>
-                  <td style="width: 5%">
-                    <img src="{{icon_id}}" style="width: 2.5rem" />
-                  </td>
-                  <td>Forecast</td>
-                  <td>{{forecast}}</td>
-
-                  <td style="width: 5%">
-                    <i class="bi bi-droplet-half"></i>
-                  </td>
-                  <td>Humidity</td>
-                  <td>{{today.humidity}}%</td>
-                </tr>
-                <tr>
-                  <td style="width: 5%">
-                    <i class="bi bi-droplet-fill"></i>
-                  </td>
-                  <td>Rainfall</td>
-                  <td>{{rain}} mm</td>
-
-                  <td style="width: 5%">
-                    <i class="bi bi-arrow-down-up"></i>
-                  </td>
-                  <td>Pressure</td>
-                  <td>{{today["pressure"]}} Pa</td>
-                </tr>
-                <tr>
-                  <td style="width: 5%">
-                    <i class="bi bi-thermometer"></i>
-                  </td>
-                  <td>Min Temp</td>
-                  <td>{{today.temp.min}} C</td>
-
-                  <td style="width: 5%">
-                    <i class="bi bi-thermometer-half"></i>
-                  </td>
-                  <td>Max Temp</td>
-                  <td>{{today.temp.max}} C</td>
-                </tr>
-                <tr>
-                  <td style="width: 5%">
-                    <i class="bi bi-shuffle"></i>
-                  </td>
-                  <td>Wind Speed</td>
-                  <td>{{today.wind_speed}} km/h</td>
-
-                  <td style="width: 5%">
-                    <i class="bi bi-cloud"></i>
-                  </td>
-                  <td>Cloudiness</td>
-                  <td>{{today.clouds}}%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div
-        class="row justify-content-centern py-3"
-        style="background-color: #36498f; height: auto"
-      >
-        <div class="container col-4 my-3 m1-0">
-          <div class="body-text">
-            <h3><strong>Methodology: </strong></h3>
-            <p>
-              The model has been trained on 10 years of weather data
-              <a
-                href="https://www.kaggle.com/jsphyg/weather-dataset-rattle-package"
-              >
-                (via Kaggle)
-              </a>
-              and uses Random Forrest Classification. SVM and Logistic
-              regression models were also tested, but this model proved to have
-              the highest accuracy.
-            </p>
-          </div>
-        </div>
-        <div class="container col-4 my-3 ml-1">
-          <div class="body-text">
-            <h3><strong>Results: </strong></h3>
-            <p>
-              Utilising the Open Weather Api, we bring in today's weather
-              conditions, which are used to determine if it will rain or not. We
-              can predict a dry day 88% of the time and a rainy day 52% of the
-              time.
-            </p>
           </div>
         </div>
       </div>
     </div>
+    <div
+      class="row justify-content-center py-3"
+      style="
+        background-image: linear-gradient(
+          to right top,
+          #36498f,
+          #2d3f82,
+          #253575,
+          #1c2b68,
+          #12225c
+        );
+        height: auto;
+      "
+    >
+      <div class="container col-md-4 col-xs-11 my-3">
+        <div class="body-text">
+          <h3><strong>Methodology: </strong></h3>
+          <p>
+            The model has been trained on 10 years of weather data
+            <a
+              href="https://www.kaggle.com/jsphyg/weather-dataset-rattle-package"
+            >
+              (via Kaggle)
+            </a>
+            and uses Random Forrest Classification. SVM and Logistic regression
+            models were also tested, but this model proved to have the highest
+            accuracy.
+          </p>
+        </div>
+      </div>
+      <div class="container justify-content-center col-md-4 col-xs-11 my-3">
+        <div class="body-text">
+          <h3><strong>Results: </strong></h3>
+          <p>
+            Utilising the Open Weather Api, we bring in today's weather
+            conditions, which are used to determine if it will rain or not. We
+            can predict a dry day 88% of the time and a rainy day 52% of the
+            time.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
   </body>
 </html>
