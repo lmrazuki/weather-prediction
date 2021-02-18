@@ -69,20 +69,12 @@ th {
   vertical-align: middle;
 }
 
-/* i:before {
-  position: relative;
-  top: 50%;
-  transform: translateY(75%);
-  display: block;
-}
-
-
 i{
   position: relative;
   top: 50%;
   transform: translateY(75%);
   display: block;
-} */
+}
 .icon {
   position: relative;
   top: 50%;
